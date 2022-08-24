@@ -9,33 +9,25 @@ import Doctors from './Container/Doctors/Doctors';
 import About from './Container/About/About';
 import { Route, Switch } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Loading from './Container/Hoc/Loading';
+
+const HWL = Loading(Home)
 
 function App() {
 
-  const [toloding, setToloding] = useState(false);
-  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const orgData = [
-    {
-      id: 101,
-      name: "amit"
-    },
-    {
-      id: 102,
-      name: "urmil"
-    }
-  ]
-
-
-  useEffect(() => {
-    setToloding(true)
-    setTimeout(() => { setToloding(false); setData(orgData) }, 2000)
+  useEffect(() => { setLoading(true) ;
+    setTimeout(() => { setLoading(false)}, 2000)
   }, [])
 
-  console.log(toloding, data);
+  console.log(loading);
 
   return (
     <div>
+      <HWL
+        loading = {loading}
+      />
       {/* <Header />
     <Switch>
       <Route exact path={"/"} component={Home}/>
