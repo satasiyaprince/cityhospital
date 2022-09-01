@@ -10,6 +10,7 @@ import About from './Container/About/About';
 import { Route, Switch } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Loading from './Container/Hoc/Loading';
+import Auth from './Container/Auth/Auth';
 
 const HWL = Loading(Home)
 
@@ -25,10 +26,10 @@ function App() {
 
   return (
     <div>
-      <HWL
+      {/* <HWL
         loading = {loading}
-      />
-      {/* <Header />
+      /> */}
+      <Header />
     <Switch>
       <Route exact path={"/"} component={Home}/>
       <Route exact path={"/departments"} component={Departments}/>
@@ -36,8 +37,9 @@ function App() {
       <Route exact path={"/doctors"} component={Doctors}/>
       <Route exact path={"/appointment"} component={Appointment}/>
       <Route exact path={"/contact"} component={Contact}/>
+      <Route exact path={"/auth"} component={Auth}/>
     </Switch>
-      <Footer /> */}
+      <Footer />
     </div>
   );
 }

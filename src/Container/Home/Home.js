@@ -5,8 +5,6 @@ import Header from '../../Component/Header/Header';
 function Home(props) {
     return (
         <div>
-            <Header />
-
             <div>
                 <section id="hero" className="d-flex align-items-center">
                     <div className="container">
@@ -268,7 +266,6 @@ function Home(props) {
                     </section>
                 </main>
             </div>
-            <Footer />
 
         </div>
     );
