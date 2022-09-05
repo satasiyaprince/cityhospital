@@ -11,6 +11,7 @@ import { Route, Switch } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Loading from './Container/Hoc/Loading';
 import Auth from './Container/Auth/Auth';
+import Medicine from './Container/Medicine/Medicine';
 
 const HWL = Loading(Home)
 
@@ -33,6 +34,7 @@ function App() {
     <Switch>
       <Route exact path={"/"} component={Home}/>
       <Route exact path={"/departments"} component={Departments}/>
+      <Route exact path={"/medicine"} component={Medicine}/>
       <Route exact path={"/about"} component={About}/>
       <Route exact path={"/doctors"} component={Doctors}/>
       <Route exact path={"/appointment"} component={Appointment}/>

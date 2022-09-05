@@ -30,6 +30,7 @@ function Header(props) {
                         <ul>
                             <li><NavLink exact className="nav-link scrollto" to={"/"}>Home</NavLink></li>
                             <li><NavLink exact className="nav-link scrollto" to={"/departments"}>Departments</NavLink></li>
+                            <li><NavLink exact className="nav-link scrollto" to={"/medicine"}>Medicine</NavLink></li>
                             <li><NavLink exact className="nav-link scrollto" to={"/doctors"}>Doctors</NavLink></li>
                             <li><NavLink exact className="nav-link scrollto " to={"/about"}>About</NavLink></li>
                             <li><NavLink exact className="nav-link scrollto" to={"/contact"}>Contact</NavLink></li>
