@@ -50,8 +50,9 @@ function Medicine(props) {
                     </div>
                 </div>
             </section>
-
-            <List Data={orgData}/>
+            <div className='row'>
+                <List Data={orgData} />
+            </div>
         </div>
     );
 }

@@ -15,13 +15,14 @@ function List({ Data }) {
                         >
                             <CardBody>
                                 <CardTitle tag="h5">
-                                    {d.name}
+                                    Name = {d.name}
                                 </CardTitle>
                                 <CardSubtitle
                                     className="mb-2 text-muted"
                                     tag="h6"
                                 >
-                                    Price = {d.price}
+                                    Price = {d.price}<br/>
+                                    Expiry = {d.expiry}
                                 </CardSubtitle>
                             </CardBody>
                         </Card>

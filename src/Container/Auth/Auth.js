@@ -1,9 +1,33 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 function Auth(props) {
     const [userType, setUserType] = useState('Login');
 
     const [reset , setReset] = useState(false);
+
+    const EmailRef = useRef();
+    const NameRef = useRef();
+    const PassRef = useRef();
+
+    function handleClick() {
+        PassRef.current.style.border='2px solid blue';
+        PassRef.current.focus();
+        console.log(EmailRef.current.value);
+    }
+
+    function Handleclick() {
+        NameRef.current.focus();
+        NameRef.current.style.border='2px solid orange'
+        console.log(EmailRef.current.value);
+        PassRef.current.focus();
+        PassRef.current.style.border='2px solid orange'
+    }
+
+    function Handle() {
+        EmailRef.current.focus();
+        EmailRef.current.style.border='2px solid darkblue'
+        console.log(EmailRef.current.value);
+    }
 
     return (
         <div>
@@ -32,12 +56,12 @@ function Auth(props) {
                                     null
                                     :
                                     <div className="row">
-                                        <input type="text" name="name" className="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                                        <input ref={NameRef} type="text" name="name" className="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
                                         <div className="validate" />
                                     </div>
                             }
                            <div className="row">
-                                        <input type="email" name="email" className="form-control" id="email" placeholder="Your email" data-rule="minlen:4" data-msg="Please enter valid Email" />
+                                        <input ref={EmailRef} type="email" name="email" className="form-control" id="email" placeholder="Your email" data-rule="minlen:4" data-msg="Please enter valid Email" />
                                         <div className="validate" />
                                     </div>
                             {
@@ -45,7 +69,7 @@ function Auth(props) {
                                 null
                                 :
                                 <div className="row">
-                                <input type="text" name="Password" className="form-control" id="password" placeholder="Your password" data-rule="minlen:4" data-msg="Please enter valid Password" />
+                                <input ref={PassRef} type="text" name="Password" className="form-control" id="password" placeholder="Your password" data-rule="minlen:4" data-msg="Please enter valid Password" />
                                 <div className="validate" />
                             </div>
                             }
@@ -53,12 +77,12 @@ function Auth(props) {
                         </div>
                         {
                             reset === true?
-                            <div className="text-center"><button type="submit">Submit</button></div>
+                            <div className="text-center"><button onClick={() => Handle()} type="submit">Submit</button></div>
                             :
                             userType === 'Login' ?
-                                <div className="text-center"><button type="submit">Login</button></div>
+                                <div className="text-center"><button onClick={() => handleClick()} type="submit" >Login</button></div>
                                 :
-                                <div className="text-center"><button type="submit">Signup</button></div>
+                                <div className="text-center"><button onClick={() => Handleclick()} type="submit">Signup</button></div>
                         }
 
                         {
