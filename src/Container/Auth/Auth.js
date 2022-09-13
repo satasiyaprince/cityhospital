@@ -45,12 +45,12 @@ function Auth(props) {
     //     email: yup.string().required("Enter your email").email("Enter your valid email")
     // }
 
-    if (userType === 'Login') {
+    if (userType === 'Login'&& reset === false) {
         authschema ={
             email: yup.string().required("Enter your email").email("Enter your valid email"),
             Password: yup.string().min(8)
         }
-    }else if (userType === 'singup') {
+    }else if (userType === 'singup' && reset === false) {
        authschema = {
             name: yup.string().required("Enter your name"),
             email: yup.string().required("Enter your email").email("Enter your valid email"),
