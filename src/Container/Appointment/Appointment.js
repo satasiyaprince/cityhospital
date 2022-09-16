@@ -5,36 +5,36 @@ import { Form, Formik, useFormik } from 'formik';
 
 function Appointment(props) {
 
-    let appschema, init;
+    let appschema, initc;
 
     appschema = {
         name: yup.string().required("Enter your name"),
         email: yup.string().required("Enter your email").email("Enter your valid email"),
         phone: yup.string().required("Enter your phone number").min(10),
-        appointment_date: yup.string().required("Enter your appointment date"),
-        select_department: yup.string().required("Enter your Select Department"),
+        date: yup.string().required("Enter your appointment date"),
+        department: yup.string().required("Enter your Select Department"),
         message: yup.string().min(6).required("Enter your message"),
     }
-    init = {
+    initc = {
         name: '',
         email: '',
         phone: '',
-        appointment_date: '',
-        select_department: '',
+        date: '',
+        department: '',
         message: '',
     }
 
     let schema = yup.object().shape(appschema);
 
     const formik = useFormik({
-        initialValues: init,
+        initialValues: initc,
         validationSchema: schema,
         onSubmit: values => {
             console.log(values);
         },
     });
 
-    const { handleChange, handleSubmit, errors } = formik
+    const { handleChange, handleSubmit, errors, touched, handleBlur } = formik
     return (
         <div>
             <section id="appointment" className="appointment">
@@ -45,8 +45,8 @@ function Appointment(props) {
                             blandit quam volutpat sollicitudin. Fusce tincidunt sit amet ex in volutpat. Donec lacinia finibus tortor.
                             Curabitur luctus eleifend odio. Phasellus placerat mi et suscipit pulvinar.</p>
                     </div>
-                    <Formik>
-                        <Form action method="post" className="php-email-form">
+                    <Formik value={formik}>
+                        <Form action method="post" onSubmit={handleSubmit} className="php-email-form">
                             <div className="row">
                                 <div className="col-md-4 form-group">
                                     <input
@@ -55,10 +55,9 @@ function Appointment(props) {
                                         className="form-control"
                                         id="name"
                                         placeholder="Your Name"
-                                        data-rule="minlen:4"
-                                        data-msg="Please enter at least 4 chars"
+                                        onBlur={handleBlur}
                                         onChange={handleChange} />
-                                        <p>{errors.name}</p>
+                                    <p>{errors.name && touched.name ? errors.name : ''}</p>
                                     <div className="validate" />
                                 </div>
                                 <div className="col-md-4 form-group mt-3 mt-md-0">
@@ -66,10 +65,9 @@ function Appointment(props) {
                                         className="form-control"
                                         name="email" id="email"
                                         placeholder="Your Email"
-                                        data-rule="email"
-                                        data-msg="Please enter a valid email" 
+                                        onBlur={handleBlur}
                                         onChange={handleChange} />
-                                        <p>{errors.email}</p>
+                                    <p>{errors.email && touched.email ? errors.email : ''}</p>
                                     <div className="validate" />
                                 </div>
                                 <div className="col-md-4 form-group mt-3 mt-md-0">
@@ -78,10 +76,10 @@ function Appointment(props) {
                                         name="phone"
                                         id="phone"
                                         placeholder="Your Phone"
-                                        data-rule="minlen:4"
-                                        data-msg="Please enter at least 4 chars" 
-                                        onChange={handleChange}/>
-                                        <p>{errors.phone}</p>
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                    />
+                                    <p>{errors.phone && touched.phone ? errors.phone : ''}</p>
                                     <div className="validate" />
                                 </div>
                             </div>
@@ -92,19 +90,25 @@ function Appointment(props) {
                                         className="form-control datepicker"
                                         id="date"
                                         placeholder="Appointment Date"
-                                        data-rule="minlen:4"
-                                        data-msg="Please enter at least 4 chars" 
-                                        onChange={handleChange}/>
-                                        <p>{errors.appointment_date}</p>
+                                        onBlur={handleBlur}
+                                        onChange={handleChange} />
+                                    <p>{errors.date && touched.date ? errors.date : ''}</p>
                                     <div className="validate" />
                                 </div>
-                                <div className="col-md-4 form-group mt-3">
-                                    <select name="department" id="department" className="form-select">
+                                <div className="col-md-4 form-group mt-3"   onChange={handleChange}
+                                        onBlur={handleBlur}>
+                                    <select
+                                        name="department"
+                                        id="department"
+                                        className="form-select"
+                                      
+                                    >
                                         <option value>Select Department</option>
                                         <option value="Department 1">Department 1</option>
                                         <option value="Department 2">Department 2</option>
                                         <option value="Department 3">Department 3</option>
                                     </select>
+                                    <p>{errors.department && touched.department ? errors.department : ''}</p>
                                     <div className="validate" />
                                 </div>
                             </div>
@@ -114,9 +118,10 @@ function Appointment(props) {
                                     name="message"
                                     rows={5}
                                     placeholder="Message (Optional)"
-                                    defaultValue={""} 
-                                    onChange={handleChange}/>
-                                    <p>{errors.message}</p>
+                                    defaultValue={""}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange} />
+                                <p>{errors.message && touched.message ? errors.message : ''}</p>
                                 <div className="validate" />
                             </div>
                             <div className="mb-3">
