@@ -12,6 +12,8 @@ import { useEffect, useState } from 'react';
 import Loading from './Container/Hoc/Loading';
 import Auth from './Container/Auth/Auth';
 import Medicine from './Container/Medicine/Medicine';
+import MedicineAdmin from './Admin/Container/MedicineAdmin';
+import Layout from './Admin/Component/Layout';
 
 const HWL = Loading(Home)
 
@@ -30,7 +32,7 @@ function App() {
       {/* <HWL
         loading = {loading}
       /> */}
-      <Header />
+      {/* <Header />
     <Switch>
       <Route exact path={"/"} component={Home}/>
       <Route exact path={"/departments"} component={Departments}/>
@@ -41,7 +43,13 @@ function App() {
       <Route exact path={"/contact"} component={Contact}/>
       <Route exact path={"/auth"} component={Auth}/>
     </Switch>
-      <Footer />
+      <Footer /> */}
+
+      <Layout>
+        <Switch>
+          <Route exact path={"/medicineadmin"} component={MedicineAdmin}/>
+        </Switch>
+      </Layout>
     </div>
   );
 }
