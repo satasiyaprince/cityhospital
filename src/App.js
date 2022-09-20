@@ -14,18 +14,19 @@ import Auth from './Container/Auth/Auth';
 import Medicine from './Container/Medicine/Medicine';
 import MedicineAdmin from './Admin/Container/MedicineAdmin';
 import Layout from './Admin/Component/Layout';
+import DoctorAdmin from './Admin/Container/DoctorAdmin';
 
-const HWL = Loading(Home)
+// const HWL = Loading(Home)
 
 function App() {
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  useEffect(() => { setLoading(true) ;
-    setTimeout(() => { setLoading(false)}, 2000)
-  }, [])
+  // useEffect(() => { setLoading(true) ;
+  //   setTimeout(() => { setLoading(false)}, 2000)
+  // }, [])
 
-  console.log(loading);
+  // console.log(loading);
 
   return (
     <div>
@@ -48,6 +49,7 @@ function App() {
       <Layout>
         <Switch>
           <Route exact path={"/medicineadmin"} component={MedicineAdmin}/>
+          <Route exact path={"/doctoradmin"} component={DoctorAdmin}/>
         </Switch>
       </Layout>
     </div>
