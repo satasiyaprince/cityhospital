@@ -6,6 +6,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import * as yup from 'yup';
+import { Form, Formik, useFormik } from 'formik'
 
 function DoctorAdmin(props) {
     const [open, setOpen] = React.useState(false);
@@ -14,9 +16,38 @@ function DoctorAdmin(props) {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = (values) => {
         setOpen(false);
     };
+
+    const doctoradd = (values) => {
+        setOpen(false);
+        console.log(values);
+        formik.resetForm();
+
+    }
+
+    let schema = yup.object().shape({
+        name: yup.string().required('Please enter your name'),
+        number: yup.number().required('Please enter your number'),
+        experian: yup.string().required('Please enter your experian'),
+        degree: yup.string().required('Please enter your degree'),
+    });
+
+    const formik = useFormik({
+        validationSchema: schema,
+        initialValues: {
+            name: '',
+            number: '',
+            experian: '',
+            degree: '',
+        },
+        onSubmit: values => {
+            doctoradd(values);
+        },
+    });
+
+    const { handleBlur, handleChange, handleSubmit, touched, errors } = formik
     return (
         <div>
             <h1>Doctor Admin Page</h1>
@@ -27,50 +58,60 @@ function DoctorAdmin(props) {
                 </Button>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>Doctor</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name='name'
-                            label="Docter Name"
-                            fullWidth
-                            variant="standard"
-                        />
-                           <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name='name'
-                            label="Docter Number"
-                            fullWidth
-                            variant="standard"
-                        />
-                           <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name='name'
-                            label="Docter Age"
-                            fullWidth
-                            variant="standard"
-                        />
-                           <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            name='name'
-                            label="Docter Weight"
-                            fullWidth
-                            variant="standard"
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button onClick={handleClose}>Add</Button>
-                    </DialogActions>
+                    <Formik value={formik}>
+                        <Form onSubmit={handleSubmit}>
+                            <DialogContent>
+                                <TextField
+                                    margin="dense"
+                                    id="name"
+                                    name='name'
+                                    label="Docter Name"
+                                    fullWidth
+                                    variant="standard"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                <p>{errors.name && touched.name ? errors.name : ''}</p>
+                                <TextField
+                                    margin="dense"
+                                    id="number"
+                                    name='number'
+                                    label="Docter Number"
+                                    fullWidth
+                                    variant="standard"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                <p>{errors.number && touched.number ? errors.number : ''}</p>
+                                <TextField
+                                    margin="dense"
+                                    id="experian"
+                                    name='experian'
+                                    label="Docter Experian"
+                                    fullWidth
+                                    variant="standard"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                <p>{errors.experian && touched.experian ? errors.experian : ''}</p>
+                                <TextField
+                                    margin="dense"
+                                    id="degree"
+                                    name='degree'
+                                    label="Docter Degree"
+                                    fullWidth
+                                    variant="standard"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                <p>{errors.degree && touched.degree ? errors.degree : ''}</p>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>Cancel</Button>
+                                    <Button type='submit'>Add</Button>
+                                </DialogActions>
+                            </DialogContent>
+                        </Form>
+                    </Formik>
                 </Dialog>
             </div>
         </div>
