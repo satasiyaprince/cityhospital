@@ -21,8 +21,23 @@ function DoctorAdmin(props) {
     };
 
     const doctoradd = (values) => {
+
+        const localData = JSON.parse(localStorage.getItem('lists'))
+
+        let id = Math.floor(Math.random() * 1000)
+
+        let data = { id: id, ...values }
+        console.log(data, localData);
+
+
+        if (localData === null) {
+            localStorage.setItem('lists', JSON.stringify([data]))
+        } else {
+            localData.push(data);
+            localStorage.setItem('lists', JSON.stringify([localData]))
+        }
+
         setOpen(false);
-        console.log(values);
         formik.resetForm();
 
     }
