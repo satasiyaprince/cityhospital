@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -9,9 +9,20 @@ import DialogTitle from '@mui/material/DialogTitle';
 import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik'
 import { RestoreFromTrash } from '@mui/icons-material';
+import { DataGrid } from '@mui/x-data-grid';
 
 function MedicineAdmin(props) {
   const [open, setOpen] = React.useState(false);
+  const [data, setData] = useState([]);
+
+  const localData = () => {
+    let localData = JSON.parse(localStorage.getItem('Medicine'));
+    setData(localData);
+  }
+
+  useEffect(() => {
+    localData();
+  }, [])
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -25,15 +36,15 @@ function MedicineAdmin(props) {
 
     let localData = JSON.parse(localStorage.getItem("Medicine"))
 
-    let id = Math.floor(Math.random()*100);
+    let id = Math.floor(Math.random() * 100);
 
-    let data = {id: id, ...values}
+    let data = { id: id, ...values }
 
     console.log(localData, data);
 
-    if(localData === null){
-        localStorage.setItem("Medicine", JSON.stringify([data]))
-    }else{
+    if (localData === null) {
+      localStorage.setItem("Medicine", JSON.stringify([data]))
+    } else {
       localData.push(data);
       localStorage.setItem("Medicine", JSON.stringify(localData))
     }
@@ -63,6 +74,25 @@ function MedicineAdmin(props) {
     },
   });
 
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'name', headerName: 'Name', width: 130 },
+    { field: 'price', headerName: 'Price', width: 130 },
+    {
+      field: 'qty',
+      headerName: 'Qnatity',
+      type: 'number',
+      width: 90,
+    },
+    {
+      field: 'expiry',
+      headerName: 'Expiry',
+      type: 'number',
+      width: 90,
+    },
+  ];
+
+
 
   const { handleChange, handleSubmit, errors, touched, handleBlur } = formik;
 
@@ -75,6 +105,16 @@ function MedicineAdmin(props) {
         <Button variant="outlined" onClick={handleClickOpen}>
           Open form dialog
         </Button>
+        <br />
+        <div style={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={data}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            checkboxSelection
+          />
+        </div>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Medicine</DialogTitle>
           <Formik value={formik}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,9 +8,21 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik'
+import { DataGrid } from '@mui/x-data-grid';
 
 function DoctorAdmin(props) {
     const [open, setOpen] = React.useState(false);
+    const [data,setData] = useState([]);
+
+
+const localData = () => {
+    const localData = JSON.parse(localStorage.getItem('lists'))
+    setData(localData);
+}
+
+    useEffect(()=>{
+        localData();
+    },[])
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -34,7 +46,7 @@ function DoctorAdmin(props) {
             localStorage.setItem('lists', JSON.stringify([data]))
         } else {
             localData.push(data);
-            localStorage.setItem('lists', JSON.stringify([localData]))
+            localStorage.setItem('lists', JSON.stringify(localData))
         }
 
         setOpen(false);
@@ -62,6 +74,27 @@ function DoctorAdmin(props) {
         },
     });
 
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'name', headerName: 'Name', width: 130 },
+        { field: 'number', headerName: 'Number', width: 130 },
+        {
+            field: 'experian',
+            headerName: 'Experian',
+            type: 'number',
+            width: 90,
+        },
+        {
+            field: 'degree',
+            headerName: 'Degree',
+            type: 'number',
+            width: 90,
+        },
+    ];
+
+
+
     const { handleBlur, handleChange, handleSubmit, touched, errors } = formik
     return (
         <div>
@@ -71,6 +104,16 @@ function DoctorAdmin(props) {
                 <Button variant="outlined" onClick={handleClickOpen}>
                     Open form dialog
                 </Button>
+                <br />
+                <div style={{ height: 400, width: '100%' }}>
+                    <DataGrid
+                        rows={data}
+                        columns={columns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
+                        checkboxSelection
+                    />
+                </div>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>Doctor</DialogTitle>
                     <Formik value={formik}>
