@@ -10,15 +10,38 @@ import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik'
 import { RestoreFromTrash } from '@mui/icons-material';
 import { DataGrid } from '@mui/x-data-grid';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function MedicineAdmin(props) {
   const [open, setOpen] = React.useState(false);
+  const [dopen, setDOpen] = React.useState(false);
   const [data, setData] = useState([]);
+  const [did, setDid] = useState(false);
 
   const localData = () => {
     let localData = JSON.parse(localStorage.getItem('Medicine'));
     setData(localData);
   }
+
+  const handleDelete = (data) => {
+    setDOpen(true)
+    setDid(data.id)
+  }
+
+
+  const handledeletedata = () => {
+    let localData = JSON.parse(localStorage.getItem('Medicine'));
+    let Ddata = localData.filter((l) => l.id !== did);
+
+    localStorage.setItem("Medicine",JSON.stringify(Ddata))
+    setData(Ddata);
+    setOpen(false);
+
+    console.log(Ddata);
+
+  }
+
 
   useEffect(() => {
     localData();
@@ -90,11 +113,22 @@ function MedicineAdmin(props) {
       type: 'number',
       width: 90,
     },
+    {
+      field: '',
+      headerName: 'Action',
+      width: 110,
+      renderCell: (parms) => (
+        <IconButton aria-label="delete" onClick={() => handleDelete(parms.row)}>
+          <DeleteIcon />
+        </IconButton>
+      )
+    },
   ];
 
 
 
   const { handleChange, handleSubmit, errors, touched, handleBlur } = formik;
+
 
 
   return (
@@ -171,6 +205,16 @@ function MedicineAdmin(props) {
               </DialogContent>
             </Form>
           </Formik>
+        </Dialog>
+        <Dialog open={dopen} onClose={handleClose}>
+          <DialogTitle>Delete Medicine</DialogTitle>
+          <DialogContent>
+            Are You Sure Delete Data
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>No</Button>
+            <Button onClick={() => handledeletedata()}>Yes</Button>
+          </DialogActions>
         </Dialog>
       </div>
     </div>
