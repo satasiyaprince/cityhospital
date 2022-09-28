@@ -12,12 +12,14 @@ import { RestoreFromTrash } from '@mui/icons-material';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 function MedicineAdmin(props) {
   const [open, setOpen] = React.useState(false);
   const [dopen, setDOpen] = React.useState(false);
   const [data, setData] = useState([]);
   const [did, setDid] = useState(false);
+  const [update, setUpdate] = useState(false);
 
   const localData = () => {
     let localData = JSON.parse(localStorage.getItem('Medicine'));
@@ -29,17 +31,23 @@ function MedicineAdmin(props) {
     setDid(data.id)
   }
 
+  const handleEdit = (data) => {
+    setOpen(true)
+    console.log(data);
+    formik.setValues(data);
+    setUpdate(true);
+  }
+
 
   const handledeletedata = () => {
     let localData = JSON.parse(localStorage.getItem('Medicine'));
     let Ddata = localData.filter((l) => l.id !== did);
 
-    localStorage.setItem("Medicine",JSON.stringify(Ddata))
+    localStorage.setItem("Medicine", JSON.stringify(Ddata))
     setData(Ddata);
-    setOpen(false);
+    setDOpen(false);
 
     console.log(Ddata);
-
   }
 
 
@@ -49,6 +57,7 @@ function MedicineAdmin(props) {
 
   const handleClickOpen = () => {
     setOpen(true);
+    setUpdate(false);
   };
 
   const handleClose = () => {
@@ -118,16 +127,21 @@ function MedicineAdmin(props) {
       headerName: 'Action',
       width: 110,
       renderCell: (parms) => (
-        <IconButton aria-label="delete" onClick={() => handleDelete(parms.row)}>
-          <DeleteIcon />
-        </IconButton>
+        <>
+          <IconButton aria-label="delete" onClick={() => handleDelete(parms.row)}>
+            <DeleteIcon />
+          </IconButton>
+          <IconButton aria-label="Edit" onClick={() => handleEdit(parms.row)}>
+            <EditIcon />
+          </IconButton>
+        </>
       )
     },
   ];
 
 
 
-  const { handleChange, handleSubmit, errors, touched, handleBlur } = formik;
+  const { handleChange, handleSubmit, errors, touched, values, handleBlur } = formik;
 
 
 
@@ -161,6 +175,7 @@ function MedicineAdmin(props) {
                   label="Medicine"
                   fullWidth
                   variant="standard"
+                  value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -172,6 +187,7 @@ function MedicineAdmin(props) {
                   label="Medicine Price"
                   fullWidth
                   variant="standard"
+                  value={values.price}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -183,6 +199,7 @@ function MedicineAdmin(props) {
                   label="Medicine Quantity"
                   fullWidth
                   variant="standard"
+                  value={values.qty}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
@@ -194,13 +211,14 @@ function MedicineAdmin(props) {
                   label="Medicine Expiry"
                   fullWidth
                   variant="standard"
+                  value={values.expiry}
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
                 <p>{errors.expiry && touched.expiry ? errors.expiry : ''}</p>
                 <DialogActions>
                   <Button onClick={handleClose}>Cancel</Button>
-                  <Button type='submit'>Add</Button>
+                  <Button type='submit'>{update ? "Updata" : "Add"}</Button>
                 </DialogActions>
               </DialogContent>
             </Form>
