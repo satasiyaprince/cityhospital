@@ -21,9 +21,11 @@ function MedicineAdmin(props) {
   const [did, setDid] = useState(false);
   const [update, setUpdate] = useState(false);
 
-  const localData = () => {
+  const getData = () => {
     let localData = JSON.parse(localStorage.getItem('Medicine'));
-    setData(localData);
+    if (localData !== null) {
+      setData(localData);
+    }
   }
 
   const handleDelete = (data) => {
@@ -52,7 +54,7 @@ function MedicineAdmin(props) {
 
 
   useEffect(() => {
-    localData();
+    getData();
   }, [])
 
   const handleClickOpen = () => {
@@ -62,7 +64,27 @@ function MedicineAdmin(props) {
 
   const handleClose = () => {
     setOpen(false);
+    setUpdate(false);
+    formik.resetForm();
+    setDOpen(false); 
   };
+
+  const handleUpdatedata = (values) => {
+    let localData = JSON.parse(localStorage.getItem("Medicine"))
+
+    let uData = localData.map((l) => {
+      if (l.id === values.id) {
+        return values;
+      } else {
+        return l;
+      }
+    })
+
+    setData(uData);
+    localStorage.setItem("Medicine", JSON.stringify(uData));
+    handleClose();
+
+  }
 
   const handleadd = (values) => {
 
@@ -83,6 +105,7 @@ function MedicineAdmin(props) {
 
     setOpen(false);
     formik.resetForm();
+    getData();
   }
 
   let schema = yup.object().shape({
@@ -102,9 +125,14 @@ function MedicineAdmin(props) {
 
     },
     onSubmit: values => {
-      handleadd(values);
+      if (update) {
+        handleUpdatedata(values);
+      } else {
+        handleadd(values);
+      }
     },
   });
+
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },

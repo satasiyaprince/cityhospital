@@ -9,27 +9,43 @@ import DialogTitle from '@mui/material/DialogTitle';
 import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik'
 import { DataGrid } from '@mui/x-data-grid';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
 
 function DoctorAdmin(props) {
     const [open, setOpen] = React.useState(false);
-    const [data,setData] = useState([]);
+    const [dopen, setDopen] = React.useState(false);
+    const [data, setData] = useState([]);
+    const [did, setDid] = useState(false);
+    const [update, setUpdate] = useState(false);
 
 
-const localData = () => {
-    const localData = JSON.parse(localStorage.getItem('lists'))
-    setData(localData);
-}
+    const getData = () => {
+        const localData = JSON.parse(localStorage.getItem('lists'))
+        if (localData !== null) {
+            setData(localData);
+        }
+    }
 
-    useEffect(()=>{
-        localData();
-    },[])
+    useEffect(() => {
+
+        getData();
+    }, [])
 
     const handleClickOpen = () => {
         setOpen(true);
+        setUpdate(false);
+        formik.resetForm();
     };
 
     const handleClose = (values) => {
         setOpen(false);
+        setUpdate(false);
+        formik.resetForm();
+        setDopen(false);
+
     };
 
     const doctoradd = (values) => {
@@ -49,6 +65,7 @@ const localData = () => {
             localStorage.setItem('lists', JSON.stringify(localData))
         }
 
+        getData();
         setOpen(false);
         formik.resetForm();
 
@@ -70,9 +87,53 @@ const localData = () => {
             degree: '',
         },
         onSubmit: values => {
-            doctoradd(values);
+            if (update) {
+                handleUpdateData(values);
+            } else {
+                doctoradd(values);
+            }
         },
     });
+
+    const handleUpdateData = (values) => {
+        const localData = JSON.parse(localStorage.getItem('lists'))
+
+        let uData = localData.map((l) => {
+            if (l.id === values.id) {
+                return values
+            } else {
+                return l;
+            }
+        })
+
+        setData(uData);
+        localStorage.setItem("lists", JSON.stringify(uData));
+        handleClose()
+
+    }
+
+    const handleEdit = (data) => {
+        console.log(data);
+        setOpen(true);
+        formik.setValues(data);
+        setUpdate(true);
+    }
+
+    const handleDelete = (data) => {
+        setDopen(true);
+        setDid(data.id)
+    }
+
+    const handleDeleteData = () => {
+        const localData = JSON.parse(localStorage.getItem('lists'))
+        let Ddata = localData.filter((l) => l.id !== did)
+
+        localStorage.setItem("lists", JSON.stringify(Ddata))
+        setData(Ddata);
+        setDopen(false);
+
+        console.log(Ddata);
+    }
 
 
     const columns = [
@@ -82,20 +143,35 @@ const localData = () => {
         {
             field: 'experian',
             headerName: 'Experian',
-            type: 'number',
+            type: '',
             width: 90,
         },
         {
             field: 'degree',
             headerName: 'Degree',
-            type: 'number',
+            type: '',
             width: 90,
+        },
+        {
+            field: '',
+            headerName: 'Action',
+            width: 90,
+            renderCell: (parms) => (
+                <>
+                    <IconButton aria-label="delete" onClick={() => handleDelete(parms.row)}>
+                        <DeleteIcon />
+                    </IconButton>
+                    <IconButton aria-label="Edit" onClick={() => handleEdit(parms.row)}>
+                        <EditIcon />
+                    </IconButton>
+                </>
+            )
         },
     ];
 
 
 
-    const { handleBlur, handleChange, handleSubmit, touched, errors } = formik
+    const { handleBlur, handleChange, handleSubmit, values, touched, errors } = formik
     return (
         <div>
             <h1>Doctor Admin Page</h1>
@@ -126,6 +202,7 @@ const localData = () => {
                                     label="Docter Name"
                                     fullWidth
                                     variant="standard"
+                                    value={values.name}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                 />
@@ -137,6 +214,7 @@ const localData = () => {
                                     label="Docter Number"
                                     fullWidth
                                     variant="standard"
+                                    value={values.number}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                 />
@@ -148,6 +226,7 @@ const localData = () => {
                                     label="Docter Experian"
                                     fullWidth
                                     variant="standard"
+                                    value={values.experian}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                 />
@@ -159,17 +238,26 @@ const localData = () => {
                                     label="Docter Degree"
                                     fullWidth
                                     variant="standard"
+                                    value={values.degree}
                                     onBlur={handleBlur}
                                     onChange={handleChange}
                                 />
                                 <p>{errors.degree && touched.degree ? errors.degree : ''}</p>
                                 <DialogActions>
                                     <Button onClick={handleClose}>Cancel</Button>
-                                    <Button type='submit'>Add</Button>
+                                    <Button type='submit'>{update ? "Update" : "Add"}</Button>
                                 </DialogActions>
                             </DialogContent>
                         </Form>
                     </Formik>
+                </Dialog>
+                <Dialog open={dopen} onClose={handleClose}>
+                    <DialogTitle>Delete Doctor List</DialogTitle>
+                    <DialogContent>Are You sure Delete Data</DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>No</Button>
+                        <Button onClick={() => handleDeleteData()}>Yes</Button>
+                    </DialogActions>
                 </Dialog>
             </div>
         </div>
