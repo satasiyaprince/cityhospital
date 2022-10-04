@@ -15,6 +15,8 @@ import Medicine from './Container/Medicine/Medicine';
 import MedicineAdmin from './Admin/Container/MedicineAdmin';
 import Layout from './Admin/Component/Layout';
 import DoctorAdmin from './Admin/Container/DoctorAdmin';
+import PatientAdmin from './Admin/Container/PatientAdmin';
+import EmployeeAdmin from './Admin/Container/EmployeeAdmin';
 
 // const HWL = Loading(Home)
 
@@ -50,6 +52,8 @@ function App() {
         <Switch>
           <Route exact path={"/medicineadmin"} component={MedicineAdmin}/>
           <Route exact path={"/doctoradmin"} component={DoctorAdmin}/>
+          <Route exact path={"/patientadmin"} component={PatientAdmin}/>
+          <Route exact path={"/employeeadmin"} component={EmployeeAdmin}/>
         </Switch>
       </Layout>
     </div>

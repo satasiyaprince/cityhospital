@@ -21,6 +21,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import { NavLink } from 'react-router-dom';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import MasksIcon from '@mui/icons-material/Masks';
+import BadgeIcon from '@mui/icons-material/Badge';
 
 
 const drawerWidth = 240;
@@ -105,7 +107,9 @@ export default function Layout({ children }) {
 
     let Medicineadmin = [
         { name: 'Medicine', icon: <MedicalServicesIcon/>, to:'/medicineadmin' },
-        { name: "doctor", icon: <LocalHospitalIcon/>, to:'/doctoradmin' }
+        { name: "doctor", icon: <LocalHospitalIcon/>, to:'/doctoradmin' },
+        {name:"patient", icon: <MasksIcon/>, to:'/patientadmin'},
+        {name:"Employee", icon: <BadgeIcon/>, to:'/employeeadmin'},
     ]
 
     return (
