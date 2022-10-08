@@ -1,19 +1,26 @@
 import React from 'react';
 import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik';
+import { useHistory } from 'react-router-dom';
 
 
 function Appointment(props) {
+
+    const history = useHistory();
 
     let appschema, initc;
 
     appschema = {
         name: yup.string().required("Enter your name"),
-        email: yup.string().required("Enter your email").email("Enter your valid email"),
+        email: yup.string().required("Enter your email"),
         phone: yup.string().required("Enter your phone number").min(10),
         date: yup.string().required("Enter your appointment date"),
         department: yup.string().required("Enter your Select Department"),
         message: yup.string().min(6).required("Enter your message"),
+        gender: yup.string().required("Enter your Gender"),
+        checkbox: yup.array().min(1).of(yup.string().required()).required("select your Hobby"),
+
+
     }
     initc = {
         name: '',
@@ -22,6 +29,25 @@ function Appointment(props) {
         date: '',
         department: '',
         message: '',
+        gender: '',
+        checkbox: '',
+
+
+    }
+
+    const handleAdd = (values) =>{
+
+        let localData = JSON.parse(localStorage.getItem("apt"));
+        console.log(localData);
+
+        if(localData === null){
+            localStorage.setItem ("apt",JSON.stringify([values]));
+        }else{
+            localData.push(values);
+            localStorage.setItem ("apt" , JSON.stringify(localData));
+        }
+
+        history.push("/listappointment");
     }
 
     let schema = yup.object().shape(appschema);
@@ -30,11 +56,11 @@ function Appointment(props) {
         initialValues: initc,
         validationSchema: schema,
         onSubmit: values => {
-            console.log(values);
+            handleAdd(values);
         },
     });
 
-    const { handleChange, handleSubmit, errors, touched, handleBlur } = formik
+    const { handleChange, handleSubmit, errors, touched, handleBlur, values } = formik
     return (
         <div>
             <section id="appointment" className="appointment">
@@ -56,17 +82,21 @@ function Appointment(props) {
                                         id="name"
                                         placeholder="Your Name"
                                         onBlur={handleBlur}
-                                        onChange={handleChange} />
+                                        onChange={handleChange}
+                                        value={values.name}
+                                    />
                                     <p>{errors.name && touched.name ? errors.name : ''}</p>
                                     <div className="validate" />
                                 </div>
                                 <div className="col-md-4 form-group mt-3 mt-md-0">
-                                    <input type="email"
+                                    <input type="text"
                                         className="form-control"
                                         name="email" id="email"
                                         placeholder="Your Email"
                                         onBlur={handleBlur}
-                                        onChange={handleChange} />
+                                        onChange={handleChange}
+                                        value={values.email}
+                                    />
                                     <p>{errors.email && touched.email ? errors.email : ''}</p>
                                     <div className="validate" />
                                 </div>
@@ -78,6 +108,8 @@ function Appointment(props) {
                                         placeholder="Your Phone"
                                         onBlur={handleBlur}
                                         onChange={handleChange}
+                                        value={values.phone}
+
                                     />
                                     <p>{errors.phone && touched.phone ? errors.phone : ''}</p>
                                     <div className="validate" />
@@ -91,17 +123,22 @@ function Appointment(props) {
                                         id="date"
                                         placeholder="Appointment Date"
                                         onBlur={handleBlur}
-                                        onChange={handleChange} />
+                                        onChange={handleChange}
+                                        value={values.date}
+                                    />
                                     <p>{errors.date && touched.date ? errors.date : ''}</p>
                                     <div className="validate" />
                                 </div>
-                                <div className="col-md-4 form-group mt-3"   onChange={handleChange}
-                                        onBlur={handleBlur}>
+                                <div className="col-md-4 form-group mt-3" onChange={handleChange}
+                                    onBlur={handleBlur}>
                                     <select
                                         name="department"
                                         id="department"
                                         className="form-select"
-                                      
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.department}
+
                                     >
                                         <option value>Select Department</option>
                                         <option value="Department 1">Department 1</option>
@@ -120,7 +157,9 @@ function Appointment(props) {
                                     placeholder="Message (Optional)"
                                     defaultValue={""}
                                     onBlur={handleBlur}
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                    value={values.message}
+                                />
                                 <p>{errors.message && touched.message ? errors.message : ''}</p>
                                 <div className="validate" />
                             </div>
@@ -129,6 +168,68 @@ function Appointment(props) {
                                 <div className="error-message" />
                                 <div className="sent-message">Your appointment request has been sent successfully. Thank you!</div>
                             </div>
+
+                            <>
+                                <label><b>Gender:-</b></label>
+
+                                <label><input type="radio"
+                                    id="gender"
+                                    name="gender"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange} />
+                                    Male
+                                </label>
+                                <label>
+                                    <input type="radio"
+                                        id="gender"
+                                        name="gender"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                    />
+                                    Female
+                                </label>
+                            </>
+                            <p>{errors.gender && touched.gender ? errors.gender : ''}</p>
+
+
+
+                            <div className="row">
+                                <div className="col-md-4 form-group">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            value="Traveling"
+                                            name="checkbox"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                        />
+                                        Traveling
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            value="Reading"
+                                            name="checkbox"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                        />
+                                        Reading
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            value="Music"
+                                            name="checkbox"
+                                            onBlur={handleBlur}
+                                            onChange={handleChange}
+                                        />
+                                        Music
+                                    </label>
+                                </div>
+                            </div>
+                            <p>{errors.checkbox && touched.checkbox ? errors.checkbox : ''}</p>
+
+
                             <div className="text-center"><button type="submit">Make an Appointment</button></div>
                         </Form>
                     </Formik>
