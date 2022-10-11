@@ -62,10 +62,12 @@ function Appointment(props) {
         let localData = JSON.parse(localStorage.getItem("apt"));
         console.log(localData);
 
+        let id = Math.floor(Math.random() * 100);
+
         if (localData === null) {
-            localStorage.setItem("apt", JSON.stringify([values]));
+            localStorage.setItem("apt", JSON.stringify([{id : id ,...values}]));
         } else {
-            localData.push(values);
+            localData.push({id : id ,...values});
             localStorage.setItem("apt", JSON.stringify(localData));
         }
 

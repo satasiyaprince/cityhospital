@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Button, Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
 
 function ListAppointment(props) {
     const [data, setData] = useState([]);
+    const history = useHistory();
 
     const getData = () => {
         let localData = JSON.parse(localStorage.getItem("apt"));
@@ -14,6 +16,18 @@ function ListAppointment(props) {
     useEffect(() => {
         getData();
     }, [])
+
+    const handleDelete = (id) =>{
+        let localData = JSON.parse(localStorage.getItem("apt"));
+
+        let Ddata = localData.filter((l) => l.id !== id);
+
+        localStorage.setItem("apt",JSON.stringify(Ddata));
+
+        console.log(localData,id);
+
+        history.push("/appointment");
+    }
     return (
         <div className='row'>
             {
@@ -33,7 +47,8 @@ function ListAppointment(props) {
                                     tag="h6"
                                 >
                                     {d.phone}<br/>
-                                    {d.date}
+                                    {d.date}<br/>
+                                    <button onClick={() => handleDelete(d.id)}>Delete</button>
                                 </CardSubtitle>
                             </CardBody>
                         </Card>
