@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Button, Card, CardBody, CardSubtitle, CardText, CardTitle } from 'reactstrap';
+import { NavLink, useHistory } from 'react-router-dom';
+import { Card, CardBody, CardSubtitle, CardTitle } from 'reactstrap';
 
 function ListAppointment(props) {
     const [data, setData] = useState([]);
@@ -17,21 +17,32 @@ function ListAppointment(props) {
         getData();
     }, [])
 
-    const handleDelete = (id) =>{
+    const handleDelete = (id) => {
         let localData = JSON.parse(localStorage.getItem("apt"));
 
         let Ddata = localData.filter((l) => l.id !== id);
 
-        localStorage.setItem("apt",JSON.stringify(Ddata));
+        localStorage.setItem("apt", JSON.stringify(Ddata));
 
-        console.log(localData,id);
+        console.log(localData, id);
 
         history.push("/appointment");
     }
+
+    const handleEdit = (data) => {
+        console.log(data);
+
+        history.push("/appointment", data);
+    }
     return (
+
         <div className='row'>
+            <>
+                <NavLink exact className="nav-link scrollto" to={"/appointment"} activeStyle={{ color: "red" }}>Appointment</NavLink>
+            </>
             {
                 data.map((d, i) => (
+
                     <div key={i} className='col-md-4'>
                         <Card
                             style={{
@@ -46,9 +57,12 @@ function ListAppointment(props) {
                                     className="mb-2 text-muted"
                                     tag="h6"
                                 >
-                                    {d.phone}<br/>
-                                    {d.date}<br/>
+                                    {d.phone}<br />
+                                    {d.date}<br />
+                                    {d.gender}<br />
+                                    {d.checkbox}<br />
                                     <button onClick={() => handleDelete(d.id)}>Delete</button>
+                                    <button onClick={() => handleEdit(d)}>Edit</button>
                                 </CardSubtitle>
                             </CardBody>
                         </Card>

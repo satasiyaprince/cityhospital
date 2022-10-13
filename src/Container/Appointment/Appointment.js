@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 import { Form, Formik, useFormik } from 'formik';
-import { useHistory } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 
 
 function Appointment(props) {
-
+    const [update, setUpdate] = useState(false);
+    useEffect(() => {
+        console.log(props.location.state);
+        if (props.location.state !== null) {
+            formik.setValues(props.location.state);
+            setUpdate(true);
+        }
+    }, [])
     const history = useHistory();
 
     let appschema, initc;
@@ -39,7 +46,7 @@ function Appointment(props) {
             .required('Enter your messge'),
 
         gender: yup.string().required("Enter your Gender"),
-        
+
         checkbox: yup.array().min(1).of(yup.string().required()).required("select your Hobby"),
 
 
@@ -52,7 +59,7 @@ function Appointment(props) {
         department: '',
         message: '',
         gender: '',
-        checkbox: '',
+        checkbox: [],
 
 
     }
@@ -65,13 +72,33 @@ function Appointment(props) {
         let id = Math.floor(Math.random() * 100);
 
         if (localData === null) {
-            localStorage.setItem("apt", JSON.stringify([{id : id ,...values}]));
+            localStorage.setItem("apt", JSON.stringify([{ id: id, ...values }]));
         } else {
-            localData.push({id : id ,...values});
+            localData.push({ id: id, ...values });
             localStorage.setItem("apt", JSON.stringify(localData));
         }
 
         history.push("/listappointment");
+    }
+
+    const UpdateData = (data) => {
+
+        const localData = JSON.parse(localStorage.getItem("apt"));
+
+        let Udata = localData.map((l) => {
+            if (l.id === data.id) {
+                return data;
+            } else {
+                return l;
+            }
+
+        })
+        localStorage.setItem("apt", JSON.stringify(Udata));
+
+        history.replace();
+        setUpdate(false);
+        history.push("/listappointment");
+        // console.log(data);
     }
 
     let schema = yup.object().shape(appschema);
@@ -80,7 +107,11 @@ function Appointment(props) {
         initialValues: initc,
         validationSchema: schema,
         onSubmit: values => {
-            handleAdd(values);
+            if (update) {
+                UpdateData(values);
+            } else {
+                handleAdd(values);
+            }
         },
     });
 
@@ -99,6 +130,7 @@ function Appointment(props) {
                         <Form action method="post" onSubmit={handleSubmit} className="php-email-form">
                             <div className="row">
                                 <div className="col-md-4 form-group">
+                                    <NavLink exact className="nav-link scrollto" to={"/listappointment"} activeStyle={{ color: "red" }}>ListAppointment</NavLink>
                                     <input
                                         type="text"
                                         name="name"
@@ -196,22 +228,25 @@ function Appointment(props) {
                             <>
                                 <label><b>Gender:-</b></label>
 
-                                <label><input type="radio"
+                                <input type="radio"
                                     id="gender"
                                     name="gender"
+                                    value={"male"}
                                     onBlur={handleBlur}
+                                    checked={values.gender === "male"}
                                     onChange={handleChange} />
-                                    Male
-                                </label>
-                                <label>
-                                    <input type="radio"
-                                        id="gender"
-                                        name="gender"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                    />
-                                    Female
-                                </label>
+                                Male
+
+                                <input type="radio"
+                                    id="gender"
+                                    name="gender"
+                                    value={"female"}
+                                    checked={values.gender === "female"}
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                />
+                                Female
+
                             </>
                             <p>{errors.gender && touched.gender ? errors.gender : ''}</p>
 
@@ -219,42 +254,43 @@ function Appointment(props) {
 
                             <div className="row">
                                 <div className="col-md-4 form-group">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            value="Traveling"
-                                            name="checkbox"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                        />
-                                        Traveling
-                                    </label>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            value="Reading"
-                                            name="checkbox"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                        />
-                                        Reading
-                                    </label>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            value="Music"
-                                            name="checkbox"
-                                            onBlur={handleBlur}
-                                            onChange={handleChange}
-                                        />
-                                        Music
-                                    </label>
+
+                                    <input
+                                        type="checkbox"
+                                        value="Traveling"
+                                        name="checkbox"
+                                        onBlur={handleBlur}
+                                        checked={values.checkbox.some((h) => h === "Traveling")}
+                                        onChange={handleChange}
+                                    />
+                                    Traveling
+
+                                    <input
+                                        type="checkbox"
+                                        value="Reading"
+                                        name="checkbox"
+                                        checked={values.checkbox.some((h) => h === "Reading")}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                    />
+                                    Reading
+
+                                    <input
+                                        type="checkbox"
+                                        value="Music"
+                                        name="checkbox"
+                                        checked={values.checkbox.some((h) => h === "Music")}
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                    />
+                                    Music
+
                                 </div>
                             </div>
                             <p>{errors.checkbox && touched.checkbox ? errors.checkbox : ''}</p>
 
 
-                            <div className="text-center"><button type="submit">Make an Appointment</button></div>
+                            <div className="text-center"><button type="submit">{update ? "Update an Appointment" : "Make an Appointment"}</button></div>
                         </Form>
                     </Formik>
                 </div>
